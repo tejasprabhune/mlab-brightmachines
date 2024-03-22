@@ -1,0 +1,49 @@
+# This is the configuration file for the ResNet Siamese CNN based on
+# https://arxiv.org/pdf/1903.04713.pdf.
+
+model: SiameseCNN
+model_key: scnn
+model_params:
+  features: resnet
+  in_channels: 2000
+  out_channels: 3
+
+###################################
+#              DATASET            #
+###################################
+dataset: ImagePositionDataset
+dataset_params:
+  dataset_path: /data/brightmachines/dataset/
+  label_name: xyr
+  img_height: 1080
+  img_width: 1920
+  use_transform: True
+
+###################################
+#           DATALOADER            #
+###################################
+dataloader_params:
+  batch_size: 4
+  shuffle: True
+  collate_fn: collate_fn
+
+
+###################################
+#              TRAINING           #
+###################################
+seed: 0
+epochs: 30
+train_split: 0.8
+val_split: 0.1
+
+###################################
+#              OPTIM              #
+###################################
+optim_params:
+  lr: 1.0e-3
+
+###################################
+#              LOSS               #
+###################################
+loss: scnn
+loss_params: {}
