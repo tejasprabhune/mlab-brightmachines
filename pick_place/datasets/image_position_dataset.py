@@ -34,7 +34,8 @@ class ImagePositionDataset(torch.utils.data.Dataset):
         label_name: str = "xy",
         img_width: int = 2592,
         img_height: int = 1944,
-        use_transform=True
+        use_transform=True,
+        crop = 0
     ):
         self.use_transform = use_transform
         self.dataset_path = pathlib.Path(dataset_path)
@@ -58,6 +59,7 @@ class ImagePositionDataset(torch.utils.data.Dataset):
 
         self.img_width = img_width
         self.img_height = img_height
+        self.crop = crop
         
     def __len__(self):
         return len(self.labels)
@@ -89,6 +91,9 @@ class ImagePositionDataset(torch.utils.data.Dataset):
         """Return Image object using file name or None if not found."""
         try:
             image = PIL.Image.open(self.image_dir / f"{image_file_name}.png")
+            image = np.array(image)
+            image = image[self.crop:, :]
+            image = PIL.Image.fromarray(image)
             image = torchvision.transforms.functional.resize(
                 image, [self.img_height, self.img_width]
             )
@@ -96,7 +101,8 @@ class ImagePositionDataset(torch.utils.data.Dataset):
             if rgb:
                 image = image.repeat(3, 1, 1)
             return image
-        except:
+        except Exception as e:
+            print(e)
             return None
         
     def get_label_data(self, idx):

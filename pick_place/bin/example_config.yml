@@ -46,4 +46,5 @@ optim_params:
 #              LOSS               #
 ###################################
 loss: scnn
-loss_params: {}
+loss_params:
+  w: 0.8
